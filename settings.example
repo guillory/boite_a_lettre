@@ -1,0 +1,16 @@
+ -- Wifi
+ cfg={};
+ cfg.ssid=""
+ cfg.pwd=""
+wifirssi=0;
+HXRATIO=333
+POIDSMIN=25
+MIN_LIGHT=1;
+LEDPIN=1;
+-- timing 
+WAIT_MN=60; -- x mn entre deux mesures
+DEEPSLEEP='YES'
+DEBUG=1
+-- DOMOTICS
+DOMO_IP='192.168.'
+DOMO_PORT=8084
