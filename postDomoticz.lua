@@ -14,16 +14,14 @@ function postDomoticzall()
 			print(code, data)
 		    if (code < 0) then
 		      print("HTTP request failed");
-		      lock=0;
 		    else
 		      print("HTTP request OK");
-		      table.remove(mesures,table.getn(mesures))
 		    end
+		    table.remove(mesures,table.getn(mesures))
 	      if (table.getn(mesures)>0) then 
-			postDomoticzall()
+			postDomoticzall();
 		  else
 		  	print ("All posted")
-		  	lock=0;
 		  	NodeSleep();
 		  end
 		  
