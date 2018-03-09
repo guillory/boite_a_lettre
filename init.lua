@@ -15,7 +15,7 @@ gpio.mode(LEDPIN,gpio.OUTPUT)
 		print ("WAIT_MN: "..WAIT_MN);
 		sun=get_sun();
 		print ("get_sun(): "..sun);
-		WAIT_MN= math.floor((WAIT_MN - (3 * sun * WAIT_MN / 1024)) + 1);
+		WAIT_MN= math.floor((WAIT_MN - (1 * sun * WAIT_MN / 1024)) + 1);
 		if WAIT_MN<0 then WAIT_MN=5; end
 		print ("WAIT_MN: "..WAIT_MN);
 		
