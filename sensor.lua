@@ -20,13 +20,19 @@ function Sensor()
 	end
 	stable, poids, prec_poids=DoMesure();
 	
-	
-	if (poids <0 and poids>-5) then poids=0; end
-	if (math.abs(poids-prec_poids) < 5) then  print('delta faible') poids=0; end
 	print ("Poids :".. poids.." grammes")
-	if (stable==1 and poids<0)  then  -- poids trop faible avec 5g de toléreance : on tarre  (poids <POIDSMIN  and not(poids >=0 and poids <=5))) 
+	
+	if ( stable==1   and (poids <0 and poids>-5) ) then 
+		poids=0;
+		print("entre 65 et zero => zero")
+    	table.insert(mesures, {type='command' , param='udevice', idx=29,nvalue=0, svalue=poids, battery=battery_level(VDD)} )
+	elseif (stable==1 and poids<0)  then  -- poids trop faible avec 5g de toléreance : on tarre  (poids <POIDSMIN  and not(poids >=0 and poids <=5))) 
 		mesures={};
 		DoTarre() ;
+	elseif  (stable==1   and  (math.abs(poids-prec_poids) < 5) )  then
+    	 print('delta faible');
+    	 poids=prec_poids;
+    	table.insert(mesures, {type='command' , param='udevice', idx=29,nvalue=0, svalue=poids, battery=battery_level(VDD)} )
 	elseif  (stable==1 )  then
     	print("facteur")
     	table.insert(mesures, {type='command' , param='udevice', idx=29,nvalue=0, svalue=poids, battery=battery_level(VDD)} )
