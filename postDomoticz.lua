@@ -1,35 +1,27 @@
 function postDomoticzall()
-	--mesures
+	tmr.delay(1000000); -- wait 1 sec
 	if (table.getn(mesures)>0) then 
 		url="http://"..DOMO_IP..":"..DOMO_PORT.."/json.htm?";
 		print("nb url: "..table.getn(mesures))
-		for k,v in pairs(mesures[table.getn(mesures)]) do
-
-			url=url..k.."="..v.."&";
-		end
+		for k,v in pairs(mesures[table.getn(mesures)]) do  	url=url..k.."="..v.."&";	end
 		url=url.."rssi="..rssi_level(wifi.sta.getrssi());
-		print ("URL : "..url)
-		
+		print ("URL : "..url);
 		http.get(url, nil, function(code, data)
 			print(code, data)
-		    if (code < 0) then
-		      print("HTTP request failed");
-		      lock=0;
-		    else
+		    if (code ==200) then
 		      print("HTTP request OK");
 		      table.remove(mesures,table.getn(mesures))
+		    else
+		      print("HTTP request failed");
 		    end
-	      if (table.getn(mesures)>0) then 
-			postDomoticzall()
-		  else
-		  	print ("All posted")
-		  	lock=0;
-		  	NodeSleep();
-		  end
-		  
+		    if (table.getn(mesures)>0) then 
+				postDomoticzall()
+			else
+			  	print ("All posted")
+			  	NodeSleep();
+			end
 	  	end)
   else
 	print("aucune valeur a poster");
-	
   end
 end

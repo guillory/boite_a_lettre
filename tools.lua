@@ -1,5 +1,17 @@
-function blink(nb,duree) 	
- for i=0,nb do gpio.write(LEDPIN,gpio.HIGH);tmr.delay(duree);gpio.write(LEDPIN,gpio.LOW);tmr.delay(duree); end
+function blink(nb,duree,level_off,LEDPIN) 	
+	nb=nb or 2;
+	duree=duree or 1000; 
+	level_off=level_off or 1;
+	LEDPIN=LEDPIN or 4;
+	gpio.mode(LEDPIN ,gpio.OUTPUT)
+	i=level_off;
+	blinktimer = tmr.create();
+	blinktimer:register(duree/2, tmr.ALARM_AUTO, function() 	 -- half second on, half second off=1 sec
+		i=i+1; gpio.write(LEDPIN,i%2); -- 
+		print("i:"..i.." nb "..nb.." mod "..i%2);	
+		if i>=(2*nb)+1 then  print('stop'); gpio.write(LEDPIN,level_off); blinktimer:stop() 	end
+	end)
+	blinktimer:start()
 end
 function get_sun()
 	gpio.mode(2,gpio.OUTPUT)
@@ -16,6 +28,7 @@ end
 end
 function NodeSleep()
 	if DEBUG then   print("sleeping "..WAIT_MN.." mn") end
+	tmr.delay(1000000);
 	if (DEEPSLEEP=='YES') then 
 			if DEBUG then  print("DEEP") end
 			node.dsleep(WAIT_MN * 60000000)

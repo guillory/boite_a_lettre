@@ -21,18 +21,15 @@ function Sensor()
 	stable, poids, prec_poids=DoMesure();
 	
 	print ("Poids :".. poids.." grammes")
-	
-	if ( stable==1   and (poids <0 and poids>-5) ) then 
-		poids=0;
-		print("entre 65 et zero => zero")
-    	table.insert(mesures, {type='command' , param='udevice', idx=29,nvalue=0, svalue=poids, battery=battery_level(VDD)} )
-	elseif (stable==1 and poids<0)  then  -- poids trop faible avec 5g de toléreance : on tarre  (poids <POIDSMIN  and not(poids >=0 and poids <=5))) 
+	if ( stable==1   and (poids <poidstolerance and poids>-poidstolerance) ) then 
+		print("entre -5 et 5 => zero")
+    	table.insert(mesures, {type='command' , param='udevice', idx=29,nvalue=0, svalue=0, battery=battery_level(VDD)} )
+	elseif (stable==1 and poids<0)  then  -- marge 
 		mesures={};
 		DoTarre() ;
-	elseif  (stable==1   and  (math.abs(poids-prec_poids) < 5) )  then
-    	 print('delta faible');
-    	 poids=prec_poids;
-    	table.insert(mesures, {type='command' , param='udevice', idx=29,nvalue=0, svalue=poids, battery=battery_level(VDD)} )
+	elseif  (stable==1   and  (math.abs(poids-prec_poids) < poidstolerance) )  then
+    	print('delta faible');
+    	table.insert(mesures, {type='command' , param='udevice', idx=29,nvalue=0, svalue=prec_poids, battery=battery_level(VDD)} )
 	elseif  (stable==1 )  then
     	print("facteur")
     	table.insert(mesures, {type='command' , param='udevice', idx=29,nvalue=0, svalue=poids, battery=battery_level(VDD)} )
@@ -40,7 +37,15 @@ function Sensor()
 	
   	if (table.getn(mesures)>0) then 
 		print ("postDomoticz "..table.getn(mesures).."")
-		ConnectWifi(postDomoticzall, NodeSleep) ;
+		nbtry=0;
+		TIMOUT=60; -- timer de sécurité 60 secondes pour tout poster 
+		httptimeout = tmr.create();
+		httptimeout:register(1000, tmr.ALARM_AUTO, function() 	
+				if 	(nbtry==0  or nbtry==TIMOUT/2) then ConnectWifi(postDomoticzall, NodeSleep) ;  end
+				print("waiting"..nbtry) 	nbtry=nbtry+1		if (nbtry>=TIMOUT ) then 	print("abandon")  WAIT_MN=1 httptimeout:stop() 	NodeSleep()		end		
+		end)
+		httptimeout:start()
+
 	else
 		print("Aucune valeure à poster") NodeSleep()
 	end

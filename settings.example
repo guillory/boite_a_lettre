@@ -7,6 +7,7 @@ HXRATIO=333
 POIDSMIN=25
 MIN_LIGHT=1;
 LEDPIN=1;
+poidstolerance=5;
 -- timing 
 WAIT_MN=60; -- x mn entre deux mesures
 DEEPSLEEP='YES'
