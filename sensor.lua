@@ -42,7 +42,7 @@ function Sensor()
 		httptimeout = tmr.create();
 		httptimeout:register(1000, tmr.ALARM_AUTO, function() 	
 				if 	(nbtry==0  or nbtry==TIMOUT/2) then ConnectWifi(postDomoticzall, NodeSleep) ;  end
-				print("waiting"..nbtry) 	nbtry=nbtry+1		if (nbtry>=TIMOUT ) then 	print("abandon")  WAIT_MN=1 httptimeout:stop() 	NodeSleep()		end		
+				print("waiting"..nbtry) 	nbtry=nbtry+1		if (nbtry>=TIMOUT ) then 	print("abandon")  WAIT_MN=2 httptimeout:stop() 	NodeSleep()		end		
 		end)
 		httptimeout:start()
 
