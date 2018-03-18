@@ -23,32 +23,19 @@ function Sensor()
 	print ("Poids :".. poids.." grammes")
 	if ( stable==1   and (poids <poidstolerance and poids>-poidstolerance) ) then 
 		print("entre -5 et 5 => zero")
-    	table.insert(mesures, {type='command' , param='udevice', idx=29,nvalue=0, svalue=0, battery=battery_level(VDD)} )
+    	table.insert(mesures, {type='command' , param='udevice', idx=29,nvalue=0, svalue=0} )
 	elseif (stable==1 and poids<0)  then  -- marge 
 		mesures={};
 		DoTarre() ;
 	elseif  (stable==1   and  (math.abs(poids-prec_poids) < poidstolerance) )  then
     	print('delta faible');
-    	table.insert(mesures, {type='command' , param='udevice', idx=29,nvalue=0, svalue=prec_poids, battery=battery_level(VDD)} )
+    	table.insert(mesures, {type='command' , param='udevice', idx=29,nvalue=0, svalue=prec_poids} )
 	elseif  (stable==1 )  then
     	print("facteur")
-    	table.insert(mesures, {type='command' , param='udevice', idx=29,nvalue=0, svalue=poids, battery=battery_level(VDD)} )
+    	table.insert(mesures, {type='command' , param='udevice', idx=29,nvalue=0, svalue=poids} )
 	end
 	
-  	if (table.getn(mesures)>0) then 
-		print ("postDomoticz "..table.getn(mesures).."")
-		nbtry=0;
-		TIMOUT=60; -- timer de sécurité 60 secondes pour tout poster 
-		httptimeout = tmr.create();
-		httptimeout:register(1000, tmr.ALARM_AUTO, function() 	
-				if 	(nbtry==0  or nbtry==TIMOUT/2) then ConnectWifi(postDomoticzall, NodeSleep) ;  end
-				print("waiting"..nbtry) 	nbtry=nbtry+1		if (nbtry>=TIMOUT ) then 	print("abandon")  WAIT_MN=2 httptimeout:stop() 	NodeSleep()		end		
-		end)
-		httptimeout:start()
-
-	else
-		print("Aucune valeure à poster") NodeSleep()
-	end
+  	ConnectWifi(postDomoticz, NodeSleep) ;  
 end
 
 function DoMesure()

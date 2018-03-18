@@ -30,11 +30,10 @@ function NodeSleep()
 	if DEBUG then   print("sleeping "..WAIT_MN.." mn") end
 	tmr.delay(1000000);
 	if (DEEPSLEEP=='YES') then 
-			if DEBUG then  print("DEEP") end
+			if DEBUG then  print("DEEPSLEEP") end
 			node.dsleep(WAIT_MN * 60000000)
 	else
-			if DEBUG then  print("NO DEEP") end
-			wifi.sta.disconnect()
+			if DEBUG then  print("NO DEEPSLEEP") end
 			tmr.delay(WAIT_MN * 60000000)
 			node.restart()
 	end

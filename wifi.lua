@@ -1,6 +1,5 @@
-
 function ConnectWifi(callback_ok, callback_ko)
-	local nbtry=0
+	local nbtry=0;RSSI=0;
 	tmr.alarm(0, 1000, 1, function()
 		if nbtry==0 then 
 			wifi.setmode(wifi.STATION)
@@ -9,7 +8,7 @@ function ConnectWifi(callback_ok, callback_ko)
 		end
 	  if (wifi.sta.status()<=4 and nbtry<=30) then 
 	    	nbtry=nbtry + 1
-	        print(getStatusString(wifi.sta.status()))
+	        print("Wifi Status:\t\t", getStatusString(wifi.sta.status()))
 	  elseif (wifi.sta.status()<=4 and nbtry>30) then 
 		print("NO WIFI wait ")
 		tmr.stop(0);
@@ -17,22 +16,21 @@ function ConnectWifi(callback_ok, callback_ko)
 		callback_ko();
 	  else
 	        ip, nm, gw=wifi.sta.getip();
-	        print("Wifi Status:\t\t", getStatusString(wifi.sta.status()))
+	          print("Wifi Status:\t\t", getStatusString(wifi.sta.status()))
 		      print("Wifi mode:\t\t", wifi.getmode())
 		      print("Wifi RSSI:\t\t", wifi.sta.getrssi())
 		      print("IP Address:\t\t", ip)
 		      print("IP Netmask:\t\t", nm)
 		      print("IP Gateway Addr:\t", gw)
 		      print("DNS 1:\t\t\t", net.dns.getdnsserver(0))
-		      print("DNS 2:\t\t\t", net.dns.getdnsserver(1))
-		      table.insert(mesures, {type='command' , param='udevice', idx=30,nvalue=0, svalue=-wifi.sta.getrssi(), battery=battery_level(VDD)} )
+		      print("DNS 2:\t\t\t", net.dns.getdnsserver(1));
+		      RSSI=wifi.sta.getrssi();
+		      table.insert(mesures, {type='command' , param='udevice', idx=idxwifi,nvalue=0, svalue=-RSSI} )
 	        tmr.stop(0);
 		callback_ok();
 	   end
 	end)
 end
-
-
 function getStatusString(status)
     if status == 0 then
         return "STATION IDLE"
@@ -50,8 +48,7 @@ function getStatusString(status)
     	return "other"
     end
 end
-
-function  rssi_level(rssi)
-	local level=math.floor((- (rssi*rssi)  +  (15000 *rssi) + 1700000 )/100000  ) ;
-		if  level>12 then return 12; else return level; end
+function  rssi_level(rssi)	
+	local level=math.floor((- (rssi*rssi)  +  (15000 *rssi) + 1700000 )/100000  ) ;		
+	if  level>12 then return 12; else return level; end 
 end

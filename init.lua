@@ -4,7 +4,7 @@ dofile("wifi.lua")
 dofile("postDomoticz.lua")
 dofile("sensor.lua")
 dofile("tools.lua")
-gpio.mode(LEDPIN,gpio.OUTPUT)
+gpio.mode(LEDPIN,gpio.OUTPUT);
 	code, reset_reason = node.bootreason();	print ("code:"..code);	print ("reset_reason:"..reset_reason)
 	if ( code==2 and reset_reason==6 )  then
 		blink(3,100000);
