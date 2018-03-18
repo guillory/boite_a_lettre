@@ -26,10 +26,11 @@ function postDomoticzall()
 			print(code, data)
 		    if (code ==200) then
 		      print("HTTP request OK");
+		      table.remove(mesures,table.getn(mesures))
 		    else
 		      print("HTTP request failed");
 		    end
-		    table.remove(mesures,table.getn(mesures))
+		   
 		    if (table.getn(mesures)>0) then 
 				postDomoticzall()
 			else
