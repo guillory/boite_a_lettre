@@ -25,7 +25,7 @@ function ConnectWifi(callback_ok, callback_ko)
 		      print("DNS 1:\t\t\t", net.dns.getdnsserver(0))
 		      print("DNS 2:\t\t\t", net.dns.getdnsserver(1));
 		      RSSI=wifi.sta.getrssi();
-		      table.insert(mesures, {type='command' , param='udevice', idx=idxwifi,nvalue=0, svalue=-RSSI} )
+		      table.insert(mesures, {type='command' , param='udevice', idx=idxwifi, nvalue=0, svalue=-RSSI} )
 	        tmr.stop(0);
 		callback_ok();
 	   end

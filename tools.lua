@@ -1,15 +1,13 @@
-function blink(nb,duree,level_off,LEDPIN) 	
+function blink(nb,duree,level_off)
 	nb=nb or 2;
 	duree=duree or 1000; 
-	level_off=level_off or 1;
-	LEDPIN=LEDPIN or 4;
+	level_off=level_off or 0;
 	gpio.mode(LEDPIN ,gpio.OUTPUT)
 	i=level_off;
 	blinktimer = tmr.create();
 	blinktimer:register(duree/2, tmr.ALARM_AUTO, function() 	 -- half second on, half second off=1 sec
-		i=i+1; gpio.write(LEDPIN,i%2); -- 
-		print("i:"..i.." nb "..nb.." mod "..i%2);	
-		if i>=(2*nb)+1 then  print('stop'); gpio.write(LEDPIN,level_off); blinktimer:stop() 	end
+		i=i+1; gpio.write(LEDPIN,i%2); -- 		--print("i:"..i.." nb "..nb.." mod "..i%2);	
+		if i>=(2*nb)+1 then   gpio.write(LEDPIN,level_off); blinktimer:stop() 	end
 	end)
 	blinktimer:start()
 end
