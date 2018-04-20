@@ -31,7 +31,10 @@ function Sensor()
 		print("< zero")
 		mesures={};
 		DoTarre() ;
-
+	elseif ((prec_poids - poids )> 2 * poidstolerance)  then  -- On a perdu plus de 10 grammes
+		print("Perte de plus de 10 grammes")
+		mesures={};
+		DoTarre() ;
 	elseif  (stable==1   and  (math.abs(poids-prec_poids) < poidstolerance) )  then
      	print('delta faible: poids = prec_poids ='..prec_poids);
     	table.insert(mesures, {type='command' , param='udevice', idx=idxpoids,nvalue=0, svalue=prec_poids} )
